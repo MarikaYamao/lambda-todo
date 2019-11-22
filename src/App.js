@@ -1,75 +1,53 @@
 import React from 'react'
 import './App.css'
-
-import {CognitoUserPool} from 'amazon-cognito-identity-js'
 import * as appConfig from './appConfig'
+import {CognitoUserPool} from 'amazon-cognito-identity-js'
+import axios from 'axios'
 
-// auth
-import Register from './auth/Register'
-import SignIn from './auth/Signin'
-import SignOut from './auth/Signout'
-import Verification from './auth/Verification'
+import Auth from './components/Auth'
+import Todo from './components/Todo'
 
-// todo
-import TodoList from './components/TodoList'
-import TodoForm from './components/TodoForm'
-
+// ユーザー認証
 const userPool = new CognitoUserPool({
     UserPoolId: appConfig.USER_POOL_ID,
     ClientId: appConfig.CLIENT_ID
 })
-
-const App = () => {
-  const [currentPage, setCurrentPage] = React.useState('')
-  const [todoList, setTodoList] = React.useState({})
-  let Content = null
-  switch (currentPage) {
-    case 'Register':
-      Content = (<Register success={() => setCurrentPage('Verification')} />)
-      break
-    case 'SignIn':
-      Content = (<SignIn success={() => setCurrentPage('SigninIn')}/>)
-      break
-    case 'Verification':
-      Content = (<Verification />)
-      break
-    default:
-      break
-  }
-  const authentication = () => {
-    const cognitoUser = userPool.getCurrentUser()
-    if(cognitoUser){
-      var token
-      cognitoUser.getSession((err, session)=>{
+const token = userPool.getCurrentUser() ? userPool.getCurrentUser().getSession((err, session)=>{
         if(err){
-          console.log(err)
+            console.log(err)
         }else{
-          console.log(session)
-          token = session.getIdToken().getJwtToken()
+            console.log(session)
+            return session.getIdToken().getJwtToken()
         }
-      })
-      return (
-          <div className="authorizeMode">
-            <SignOut />
-            <TodoList accessToken={token} />
-            <TodoForm accessToken={token} />
-          </div>
-        )
-    }else{
-      return (
-          <div className="unauthorizeMode">
-            <span onClick={() => setCurrentPage('Register')}>Register</span>
-            <span onClick={() => setCurrentPage('SignIn')}>SignIn</span>
-            <div>{Content}</div>
-          </div>
+    }) : null
+
+export default class App extends React.Component {
+    state = {
+        token: token,
+        todoList: []
+    }
+    componentWillMount(){
+        if(!token)return
+        return axios.get(appConfig.INVOKE_URL + '/todo'
+                            , { headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': token
+                                } 
+                            })
+                        .then((results) => {        
+                            this.setState({ todoList: results.data.Items })
+                        }).catch((error) => {
+                            console.log(error)
+                        })
+    }
+    
+    render(){
+        return (
+            <div className="App">
+                <Auth cognitoUser={userPool.getCurrentUser()}/>
+                { token && 
+                <Todo accessToken={this.state.token} todos={this.state.todoList}/>}
+            </div>
         )
     }
-  }
-  
-  return (
-      <div className="App">
-        {authentication()}
-      </div>
-    )
 }
-export default App

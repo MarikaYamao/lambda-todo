@@ -22,7 +22,7 @@ const Signout = () => {
     }
     return (
         <div className="SignOut">
-          <span onClick={signOut}>Sign Out</span>
+          <span className="btn" onClick={signOut}>Sign Out</span>
         </div>
     )
 }

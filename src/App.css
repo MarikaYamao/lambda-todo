@@ -1,25 +1,48 @@
-.App {
+#root {
+  margin: 0 auto;
+  width: 90%;
 }
 
-.App-logo {
-  height: 40vmin;
+body {
+  margin: 0;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #09d3ac;
+h1 {
+  background: #93a1c7;
+  margin: 0;
+  padding: 20px;
+  font-size: 1.5em;
 }
 
 span {
+}
+
+.unauthorizeMode {
+  margin: 10px 0;
+}
+
+.btn {
+  border-bottom: 1px solid #ccc;
+  padding: 0.4em;
+}
+
+.btn:hover{
+  background: #edeef0;
+}
+
+.Register, .SignIn{
   margin: 0 10px;
+}
+
+.Register input, .SignIn input{
+  width: 23em;
+  height: 1.8em;
+  display: block;
+}
+
+.Register input[type="submit"], .SignIn input[type="submit"]{
+  width: 8em;
+  display: block;
+  border-radius: 0.3em;
+  margin-top: 1em;
 }

@@ -8,19 +8,15 @@ const userPool = new CognitoUserPool({
 })
 
 const Signin = (props) => {
-    const [email, setEmail] = React.useState('')
-    const [password, setPassword] = React.useState('')
     const [error, setError] = React.useState('')
-    const changedEmailHandler = (e) => setEmail(e.target.value)
-    const changedPasswordHandler = (e) => setPassword(e.target.value)
     
-    const signIn = () => {
+    const signIn = (e) => {
         const authenticationDetails = new AuthenticationDetails({
-            Username : email,
-            Password : password
+            Username : e.target.email.value,
+            Password : e.target.password.value
         })
         const cognitoUser = new CognitoUser({
-            Username: email,
+            Username: e.target.email.value,
             Pool: userPool
         })
         
@@ -40,9 +36,11 @@ const Signin = (props) => {
         <div className="SignIn">
             <h2>Sign In</h2>
             {error && <p>error : {error.message}</p>}
-            <input type="text" placeholder='email' onChange={changedEmailHandler}/>
-            <input type="password" placeholder='password' onChange={changedPasswordHandler}/>
-            <button onClick={signIn}>Sign In</button>
+            <form onSubmit={signIn}>
+                <input type="text" name="email" placeholder='email' />
+                <input type="password" name="password" placeholder='password' />
+                <input type="submit" value="SignIn" />
+            </form>
         </div>
         )
 }

@@ -2,11 +2,11 @@ import React from 'react'
 import * as appConfig from '../appConfig'
 import axios from 'axios'
 
-const TodoForm= (props) => {
-    const [content, setContent] = React.useState('')
-    const changedContentHandler = (e) => setContent(e.target.value)
-    
-    const postDataFromApi = () => {
+const Todo = (props) => {
+    const list = props.todos.map((todo) => {
+      return <li key={todo.TodoId}>{todo.content}</li>
+    })
+    const addTodo = (e) => {
         axios({
             method: 'POST',
             url: appConfig.INVOKE_URL + '/todo',
@@ -14,7 +14,7 @@ const TodoForm= (props) => {
                 Authorization: props.accessToken
             },
             data: JSON.stringify({
-                content: content
+                content: e.target.content.value
             }),
             contentType: 'application/json'
         })
@@ -23,13 +23,17 @@ const TodoForm= (props) => {
         }).catch((error) => {
             console.log(error)
         })
-        setContent('')
     }
     return(
-        <div className="todoForm">
-            <input type="text" placeholder='todo .... ' onChange={changedContentHandler} value={content}/>
-            <button onClick={postDataFromApi}>Sign In</button>
+        <div>
+            <form onSubmit={addTodo}>
+                <input type="text" placeholder='todo .... ' name="content"/>
+                <input type="submit" value="add" />
+            </form>
+            <ul>
+                {list}
+            </ul>
         </div>
         )
 }
-export default TodoForm
+export default Todo
