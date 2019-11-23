@@ -17,7 +17,7 @@ h1 {
 span {
 }
 
-.unauthorizeMode {
+.unauthorizeMode, .authorizeMode {
   margin: 10px 0;
 }
 
@@ -40,7 +40,7 @@ span {
   display: block;
 }
 
-.Register input[type="submit"], .SignIn input[type="submit"]{
+.Register button, .SignIn button{
   width: 8em;
   display: block;
   border-radius: 0.3em;

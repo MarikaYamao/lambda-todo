@@ -12,7 +12,8 @@ const userPool = new CognitoUserPool({
     UserPoolId: appConfig.USER_POOL_ID,
     ClientId: appConfig.CLIENT_ID
 })
-const token = userPool.getCurrentUser() ? userPool.getCurrentUser().getSession((err, session)=>{
+const cognitoUser = userPool.getCurrentUser()
+const token = cognitoUser ? cognitoUser.getSession((err, session)=>{
         if(err){
             console.log(err)
         }else{
@@ -44,7 +45,7 @@ export default class App extends React.Component {
     render(){
         return (
             <div className="App">
-                <Auth cognitoUser={userPool.getCurrentUser()}/>
+                <Auth cognitoUser={cognitoUser}/>
                 { token && 
                 <Todo accessToken={this.state.token} todos={this.state.todoList}/>}
             </div>
