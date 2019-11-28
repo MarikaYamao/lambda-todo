@@ -41,13 +41,26 @@ export default class App extends React.Component {
                             console.log(error)
                         })
     }
+    getTodo(){
+        axios.get(appConfig.INVOKE_URL + '/todo'
+                            , { headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': token
+                                } 
+                            })
+                        .then((results) => {        
+                            this.setState({ todoList: results.data.Items })
+                        }).catch((error) => {
+                            console.log(error)
+                        })
+    }
     
     render(){
         return (
             <div className="App">
                 <Auth cognitoUser={cognitoUser}/>
                 { token && 
-                <Todo accessToken={this.state.token} todos={this.state.todoList}/>}
+                <Todo accessToken={this.state.token} todos={this.state.todoList} getTodo={() => this.getTodo()}/>}
             </div>
         )
     }

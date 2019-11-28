@@ -2,11 +2,17 @@ import React from 'react'
 import * as appConfig from '../appConfig'
 import axios from 'axios'
 
+import List from './List'
+
 const Todo = (props) => {
+    const [content, setContent] = React.useState('')
+    const changedContentHandler = (e) => setContent(e.target.value)
+
     const list = props.todos.map((todo) => {
-      return <li key={todo.TodoId}>{todo.content}</li>
+      return <List class={""} key={todo.TodoId} content={todo.content} />
     })
-    const addTodo = (e) => {
+    const addTodo = () => {
+        const text = content
         axios({
             method: 'POST',
             url: appConfig.INVOKE_URL + '/todo',
@@ -14,11 +20,13 @@ const Todo = (props) => {
                 Authorization: props.accessToken
             },
             data: JSON.stringify({
-                content: e.target.content.value
+                content: text
             }),
             contentType: 'application/json'
         })
         .then((results) => {
+            setContent('')
+            props.getTodo()
             console.log(results)
         }).catch((error) => {
             console.log(error)
@@ -26,11 +34,9 @@ const Todo = (props) => {
     }
     return(
         <div>
-            <form onSubmit={addTodo}>
-                <input type="text" placeholder='todo .... ' name="content"/>
-                <input type="submit" value="add" />
-            </form>
-            <ul>
+            <input type="text" placeholder='todo .... ' value={content} onChange={changedContentHandler}/>
+            <button onClick={addTodo}>add</button>
+            <ul className="todoList">
                 {list}
             </ul>
         </div>

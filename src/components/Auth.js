@@ -23,7 +23,7 @@ const Auth = (props) => {
             Content = (<Register success={() => setCurrentPage('Verification')} />)
             break
           case 'SignIn':
-            Content = (<SignIn success={() => setCurrentPage('SigninIn')}/>)
+            Content = (<SignIn/>)
             break
           case 'Verification':
             Content = (<Verification />)

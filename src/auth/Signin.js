@@ -27,7 +27,7 @@ const Signin = (props) => {
         cognitoUser.authenticateUser(authenticationDetails, {
             onSuccess: (result) => {
                 console.log(result)
-                props.success()
+                window.location.reload()
             },
             onFailure: (err) => {
                 setError(err)
